@@ -1,0 +1,208 @@
+﻿
+<style>
+    .layui-body {
+        overflow-y: scroll;
+    }
+</style>
+<div class="layui-card" style="background-color:#F2F2F2">
+
+
+
+
+
+    <div class="layui-card-body">
+        <div class="layui-inline">
+            <label class="layui-form-label">服务名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="fwmc" name="number" lay-verify="required|number" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+    
+        <div class="layui-btn-group demoTable" style="margin-left:20px">
+            <button type="button" class="layui-btn" data-type="reload_quartz">查询</button>
+            <button class="layui-btn layui-btn-normal" data-type="Add_quattz">添加</button>
+            <button type="button" class="layui-btn layui-btn-danger" data-type="getStopQuartz">停用</button>
+        </div>
+
+    </div>
+
+
+</div>
+
+<table class="layui-table" id="quartzLiat" lay-filter="qurartzdemo" ></table>
+
+<script type="text/html" id="barDemoQuartz">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del1">停用</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="run">运行</a>
+
+</script>
+<script id="createTime" type="text/html">
+    {{new Date(d.createtime.replace("T", " ")).pattern("yyyy-MM-dd hh:mm:ss")}}
+</script>
+<script id="state" type="text/html">
+    {{getstatname(d.state)}}
+</script>
+
+<script id="Quartztypeid" type="text/html">
+    {{getQuartzType(d.typeid)}}
+</script>
+
+<script>
+    var nameserch = $("#fwmc").val();
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#quartzLiat'
+          , url: apiUrl + '/api/Quartz/GetAllTask'
+          , cols: [[
+              { type: 'checkbox', fixed: 'left' }
+            , { field: 'id', title: 'ID', width: 70 }
+            , { field: 'taskname', title: '任务名称' }
+            , { field: 'typeid', title: '类型' ,templet: '#Quartztypeid' }
+            , { field: 'cronstr', title: 'cron表达式' }
+            , { field: 'remake', title: '说明' }
+            , { field: 'state', title: '状态', templet: '#state' }
+            , { title: '操作', toolbar: '#barDemoQuartz' }
+
+            //<th lay-data="{fixed: 'right', align:'center', toolbar: '#barDemo'}">操作</th>
+          ]]
+          , page: true,
+            id: 'idQuartzTest',
+            where: { name: nameserch },
+           // size:'sm'
+
+        });
+
+
+        //监听表格复选框选择
+        table.on('checkbox(qurartzdemo)', function (obj) {
+            console.log(obj)
+        });
+        //监听工具条
+        table.on('tool(qurartzdemo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+               // layer.msg('ID：' + data.id + ' 的查看操作');
+                layer.open({
+                    type: 2,
+                    content: '/QuartzMange/QuartzDetail.html?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+
+                    maxmin: true,
+                    area: ['780px', '560px']
+
+                });
+            } else if (obj.event === 'del1') {
+                layer.confirm('真的停用该任务么', function (index) {
+                    $.ajax({
+                        url: apiUrl + '/api/Quartz/Delete?idList=' +  obj.data.id,
+                        type: 'get',
+                        success: function (data) {
+                            //obj.del();
+                            layer.close(index);
+                            parent.$(".layui-laypage-btn")[0].click();
+                        }
+
+                    });
+                
+                });
+            } else if (obj.event === 'edit') {
+            
+                layer.open({
+                    type: 2,
+                    content: '/QuartzMange/QuartzEdit.html?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+
+                    maxmin: true,
+                    area: ['980px', '760px']
+
+                });
+            }
+            else if (obj.event === 'run') {
+                layer.confirm('真的启用该任务么', function (index) {
+                    if (obj.data.state == 4 || obj.data.state == 1 || obj.data.state == 3) {
+                        layer.msg('该任务已启用！');
+                        return;
+                    }
+                    $.ajax({
+                        url: apiUrl + '/api/Quartz/EditTaskSt?state=1&id=' + obj.data.id,
+                        type: 'get',
+                        success: function (data) {
+                            //obj.del();
+                            layer.close(index);
+                            parent.$(".layui-laypage-btn")[0].click();
+                        }
+
+                    });
+
+                });
+            }
+        });
+
+        var $ = layui.$, active = {
+            getStopQuartz: function () { //获取选中数据
+                var checkStatus = table.checkStatus('idQuartzTest')
+                , data = checkStatus.data;
+                //layer.alert(JSON.stringify(data));
+
+                layer.confirm('真的停用么', function (index) {
+                    var idList = "";
+                    for (var i = 0; i < data.length; i++) {
+                        idList += data[i].id+",";
+                    }
+                    idList=  idList.substring(0, idList.length - 1);
+                    $.ajax({
+                        url: apiUrl + '/api/Quartz/Delete?idList=' + idList,
+                        type: 'get',
+                        success: function (data) {
+                            //obj.del();
+                            layer.close(index);
+                            parent.$(".layui-laypage-btn")[0].click();
+                        }
+
+                    });
+                    layer.close(index);
+                    parent.$(".layui-laypage-btn")[0].click();
+                });
+            }
+          , getCheckLength: function () { //获取选中数目
+              var checkStatus = table.checkStatus('idQuartzTest')
+              , data = checkStatus.data;
+              layer.msg('选中了：' + data.length + ' 个');
+          }
+          , isAll: function () { //验证是否全选
+              var checkStatus = table.checkStatus('idQuartzTest');
+              layer.msg(checkStatus.isAll ? '全选' : '未全选')
+          }, reload_quartz: function () {
+              // var demoReload = $('#demoReload');
+              var nameserch = $("#fwmc").val();
+              table.reload('idQuartzTest', {
+                  where: {
+                      name: nameserch
+                  }, page: {
+                      curr: 1 //重新从第 1 页开始
+                  }
+              });
+          }, Add_quattz: function () {
+              layer.open({
+                  type: 2,
+                  content: '/QuartzMange/QuartzAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+
+                  maxmin: true,
+                  area: ['980px', '760px']
+
+              });
+          }
+
+
+        };
+
+     
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>

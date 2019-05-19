@@ -1,0 +1,300 @@
+﻿@{
+    Layout = null;
+}
+@using Kuka_Model.Report;
+@model kuka_workshop_execute_analysisModel
+<!DOCTYPE html>
+<link rel="stylesheet" href="~/Content/lay_css/layui_1.css" />
+
+<script type="text/javascript" src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="~/Content/lay_js/layui.js"></script>
+<script type="text/javascript" src="~/Content/lay_js/vue.js"></script>
+<script type="text/javascript" src="~/Content/lay_js/Main.js"></script>
+<script type="text/javascript" src="~/Content/lay_js/lay/modules/form.js"></script>
+<script type="text/javascript" src="~/Content/lay_js/lay/modules/formSelects.js"></script>
+
+<link rel="stylesheet" href="~/Content/lay_js/css/modules/formSelects-v4.css" />
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>kuka_sp_workshop_execute_analysis</title>
+</head>
+<body class="layui-layout layui-layout-admin">
+    <form class="layui-form" action="" style="padding:20px" id="formBody">
+        <div class="layui-body">
+            <!-- 内容主控区域 -->
+            <div id="PageBody">
+                <style>
+                    .layui-body {
+                        overflow-y: scroll;
+                    }
+                </style>
+            </div>
+            <div class="layui-card" style="background-color:#F2F2F2;">
+                <div class="layui-card-body">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">销售订单号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="sales_order_no" name="sales_order_no" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">主计划编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="main_schedule_no" name="main_schedule_no" class="layui-input">
+                        </div>
+
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">生产工厂</label>
+                        <div class="layui-input-inline">
+                            <div class="layui-input-inline" id="div_factory">
+                                <select name="select1" id="select1" xm-select="select1" xm-select-height="36px" xm-select-skin="primary">
+                                    @foreach (var item in Model.FactoryList)
+                                    {
+                                        <option value="@item.ID">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-input-inline">
+                            <button id="bt_search" type="button" class="layui-btn" data-type="reload_user">查询</button>&nbsp;
+                            <button id="bt_exportExcel" type="button" class="layui-btn" data-type="reload_user">导出Excel (当页)</button>&nbsp;
+                            <button id="bt_exportAllExcel" type="button" class="layui-btn" data-type="reload_user">导出Excel</button>
+                        </div>
+                    </div><br /><br />
+                    <div class="layui-inline">
+                        <label class="layui-form-label">订单回复交期</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="createtime" id="plan_reply_begin_date" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>至
+                        <div class="layui-input-inline">
+                            <input type="text" name="createtime" id="plan_reply_end_date" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">计划装箱日期</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="createtime" id="packing_begin_time" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>至
+                        <div class="layui-input-inline">
+                            <input type="text" name="createtime" id="packing_end_time" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>
+                    </div><br /><br />
+                    <div class="layui-inline">
+                        <label class="layui-form-label">U9入库时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="createtime" id="storage_begin_date" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>至
+                        <div class="layui-input-inline">
+                            <input type="text" name="createtime" id="storage_end_date" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">打包完工时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="createtime" id="package_begin_date" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>至
+                        <div class="layui-input-inline">
+                            <input type="text" name="createtime" id="package_end_date" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="layui-inline">
+                        <label class="layui-form-label">包制完成时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="createtime" id="scan_begin_date" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>至
+                        <div class="layui-input-inline">
+                            <input type="text" name="createtime" id="scan_end_date" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">U9未入库</label>
+                        <div class="layui-input-inline" id="div_storage">
+                            <select name="select2" id="select2" xm-select="select2" xm-select-height="36px" xm-select-skin="primary">
+                                <option value="是">是</option>
+                                <option value="否">否</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="layui-table" id="test" lay-filter="demo" lay-size="sm"></table>
+        </div>
+    </form>
+</body>
+</html>
+<script id="createTime" type="text/html">
+    {{new Date(d.create_date.replace("T", " ")).pattern("yyyy-MM-dd hh:mm:ss")}}
+</script>
+
+<script type="text/javascript">
+    layui.config({
+        base: '/Content/lay_js/lay/modules/' //此处路径请自行处理, 可以使用绝对路径
+    }).extend({
+        formSelects: 'formSelects'
+    });
+
+    layui.use(['form', 'laydate', 'formSelects'], function () {
+        var form = layui.form
+        , layer = layui.layer
+        , laydate = layui.laydate
+        , formSelects = layui.formSelects;
+
+        //日期
+        laydate.render({
+            elem: '#plan_reply_begin_date',
+            type: 'datetime',
+            format: 'yyyy-MM-dd'
+        });
+        laydate.render({
+            elem: '#plan_reply_end_date',
+            type: 'datetime',
+            format: 'yyyy-MM-dd'
+        });
+        laydate.render({
+            elem: '#packing_begin_time',
+            type: 'datetime',
+            format: 'yyyy-MM-dd'
+        });
+        laydate.render({
+            elem: '#packing_end_time',
+            type: 'datetime',
+            format: 'yyyy-MM-dd'
+        });
+        laydate.render({
+            elem: '#storage_begin_date',
+            type: 'datetime',
+            format: 'yyyy-MM-dd'
+        });
+        laydate.render({
+            elem: '#storage_end_date',
+            type: 'datetime',
+            format: 'yyyy-MM-dd'
+        });
+        laydate.render({
+            elem: '#package_begin_date',
+            type: 'datetime',
+            format: 'yyyy-MM-dd'
+        });
+        laydate.render({
+            elem: '#package_end_date',
+            type: 'datetime',
+            format: 'yyyy-MM-dd'
+        });
+        laydate.render({
+            elem: '#scan_begin_date',
+            type: 'datetime',
+            format: 'yyyy-MM-dd'
+        });
+        laydate.render({
+            elem: '#scan_end_date',
+            type: 'datetime',
+            format: 'yyyy-MM-dd'
+        });
+
+        formSelects.config('select1', {
+        }, false);
+
+        formSelects.config('select2', {
+        }, false);
+    });
+
+    $("#bt_search").click(function () {
+        var sales_order_no = $("#sales_order_no").val();
+        var main_schedule_no = $("#main_schedule_no").val();
+
+        var factoryIds = "";
+        var factoryID = ''
+        $("#div_factory").find("span").each(function (i) {
+            factoryID = $(this).attr('value');
+            if (factoryID != undefined) {
+                factoryIds += $(this).attr('value') + ',';
+            }
+        })
+
+        var plan_reply_begin_date = $("#plan_reply_begin_date").val();
+        var plan_reply_end_date = $("#plan_reply_end_date").val();
+
+        var packing_begin_time = $("#packing_begin_time").val();
+        var packing_end_time = $("#packing_end_time").val();
+
+        var storage_begin_date = $("#storage_begin_date").val();
+        var storage_end_date = $("#storage_end_date").val();
+
+        var package_begin_date = $("#package_begin_date").val();
+        var package_end_date = $("#package_end_date").val();
+
+        var scan_begin_date = $("#scan_begin_date").val();
+        var scan_end_date = $("#scan_end_date").val();
+
+        var storage = '';
+        var storages = '';
+        $("#div_storage").find("span").each(function (i) {
+            storage = $(this).attr('value');
+            if (storage != undefined) {
+                storages += $(this).attr('value') + ',';
+            }
+        })
+
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                elem: '#test'
+              , url: '/Report/GetWorkshopExecuteAnalysis'
+              , cols: [[
+                  { field: 'factory_name', title: '工厂', width: 140 }
+                , { field: 'suite_bar_code', title: '套条码', width: 125 }
+                , { field: 'cargo_no', title: '货号', width: 125 }
+                , { field: 'model_no', title: '型号', width: 125 }
+                , { field: 'specifications_no', title: '规格', width: 125 }
+                , { field: 'single_spec', title: '单件规格', width: 125 }
+                , { field: 'num', title: '数量', width: 80 }
+                , { field: 'standard_set', title: '标准套系数', width: 90 }
+                , { field: 'sewing_working_procedure_plan_date', title: '缝纫工序计划完工时间', width: 150 }
+                , { field: 'sewing_working_procedure_scan_date', title: '缝纫工序实际扫描时间', width: 150 }
+                , { field: 'sofa_working_procedure_plan_date', title: '沙发工序计划完工时间', width: 150 }
+                , { field: 'sofa_working_procedure_work_shop', title: '沙发车间', width: 180 }
+                , { field: 'sofa_working_procedure_scan_date', title: '沙发工序实际扫描时间', width: 150 }
+                , { field: 'pack_working_procedure_plan_date', title: '包装工序计划完工时间', width: 150 }
+                , { field: 'pack_working_procedure_scan_date', title: '包装工序实际扫描时间', width: 150 }
+                , { field: 'actual_item_u9_storage_time', title: 'U9实际入库时间', width: 150 }
+                , { field: 'plan_replay_time', title: '计划回复交期', width: 150 }
+                , { field: 'packing_time', title: '计划装箱日期', width: 150 }
+                , { field: 'main_schedule_no', title: '主计划单号', width: 140 }
+                , { field: 'sales_order_no', title: '销售订单号', width: 140 }
+              ]]
+              , page: true,
+                limit: 30,
+                id: 'idTest',
+                where: {
+                    sales_order_no: sales_order_no,
+                    main_schedule_no: main_schedule_no,
+                    factory_name: factoryIds,
+                    plan_reply_begin_date: plan_reply_begin_date,
+                    plan_reply_end_date: plan_reply_end_date,
+                    packing_begin_time: packing_begin_time,
+                    packing_end_time: packing_end_time,
+                    storage_begin_date: storage_begin_date,
+                    storage_end_date: storage_end_date,
+                    package_begin_date: package_begin_date,
+                    package_end_date: package_end_date,
+                    scan_begin_date: scan_begin_date,
+                    scan_end_date: scan_end_date,
+                    is_not_in_storage: storages
+                },
+            });
+        });
+    });
+
+    $("#bt_exportExcel").click(function () {
+        alert("开发中....");
+    })
+
+    $("#bt_exportAllExcel").click(function () {
+        alert("开发中....");
+    })
+</script>

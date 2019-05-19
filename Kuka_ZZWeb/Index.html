@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Layui</title>
+    <link href="CSS/layui.css" rel="stylesheet" />
+    <script src="JS/vue.js"></script>
+    <link href="CSS/modules/layer/default/layer.css" rel="stylesheet" />
+    <script src="JS/jquery-v3.2.1.js"></script>
+    <script src="JS/Main.js"></script>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">Kuka_ZZWeb</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left" id="topMenu">
+
+                <li class="layui-nav-item" v-for="menu in menus">
+                    <a href="javascript:;" v-on:click="loadPage( menu.Url )">{{ menu.Name }}</a>
+                    <dl class="layui-nav-child" v-if="menu.IsParent" v-show="menu.IsParent">
+                        <dd v-for="child in menu.Childs" v-on:click="loadPage( child.Url )"><a href="#">{{child.Name}}</a></dd>
+                    </dl>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <!--<img src="http://t.cn/RCzsdCq" class="layui-nav-img">-->
+                        Admin
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">基本资料</a></dd>
+                        <dd><a href="">安全设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="Login.html">退了</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test" id="leftmenu">
+                    <li class="layui-nav-item" v-for="menu in menus">
+                        <!--layui-nav-itemed--><!--是否展开-->
+                        <a class="" href="javascript:;" v-on:click="loadPage( menu.Url )">{{menu.Name}}</a>
+                        <dl class="layui-nav-child" v-if="menu.IsParent">
+                            <dd v-for="child in menu.Childs"><a href="javascript:;" v-on:click="loadPage( child.Url )">{{child.Name}}</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <div style="padding: 15px;" id="PageBody">
+
+
+            </div>
+        </div>
+
+        <div class="layui-footer">
+            ©  底部固定区域
+        </div>
+    </div>
+    <script src="JS/layui.js"></script>
+    <script>
+
+
+      
+        //JavaScript代码区域
+        layui.config({
+            base: '../JS/' //此处路径请自行处理, 可以使用绝对路径
+        }).extend({
+            formSelects: 'formSelects-v4'
+        });
+        layui.use( ['element', 'layedit'], function(){
+    var element = layui.element;
+    var layer = layui.layui;
+  
+  if (getCookie("name") == null) {
+      //this.layer.confirm('请登录', {
+      //    btn: ['确认'], //按钮
+      //    cancel: function (index) {
+
+      //        location.href = 'login.html';
+      //    }
+      //}, function (index) {
+       
+      //    location.href = 'login.html';
+      //}) ;
+      alert("请登录！");
+      location.href = 'login.html';
+   
+  }
+});
+
+    </script>
+    <script>
+        var app4;
+  $.ajaxSetup({
+            cache: false //关闭AJAX缓存
+        });
+        $.ajax({
+            url:apiUrl+ '/api/MAIN/GetMenuByUserID?ID='+getCookie("userid"),
+            type: 'get',
+            async: false,
+            success: function (data1) {
+                //头部导航
+                 app4 = new Vue({
+                    el: '#topMenu',
+                    data: {
+                        menus: data1
+                    },
+                    methods: {
+                        loadPage: function (event) {
+                            if (event == '' || event == null) {
+                                return;
+                            }
+                            document.getElementById("PageBody").innerHTML = "";
+                            $("#PageBody").load(event), function () { }
+                        }
+                    }
+                })
+
+                var app5 = new Vue({
+                    el: '#leftmenu',
+                    data: {
+                        menus: data1
+                    },
+                    methods: {
+                        loadPage: function (event) {
+                            if (event == '' || event == null) {
+                                return;
+                            }
+                            //var stateObject = {};
+                            //var title = "Wow Title";
+                            //var newUrl = event;
+                          //  history.pushState(stateObject, title, newUrl);
+                            $("#PageBody").load(event), function () { $("#PageBody").fadeIn(100); }
+                        }
+                    }
+                })
+            }
+
+        });
+    </script>
+</body>
+</html>

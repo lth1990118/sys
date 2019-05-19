@@ -1,0 +1,86 @@
+﻿
+<style>
+    .layui-body {
+        overflow-y: scroll;
+    }
+</style>
+<div class="layui-card" style="background-color:#F2F2F2">
+
+
+
+
+
+    <div class="layui-card-body">
+        <div class="layui-inline">
+            <label class="layui-form-label">任务名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="fwmc" name="number" lay-verify="required|number" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+    
+        <div class="layui-btn-group demoTable" style="margin-left:20px">
+            <button type="button" class="layui-btn" data-type="reload">查询</button>
+          
+        </div>
+
+    </div>
+
+
+</div>
+
+<table class="layui-table" id="tbLog" lay-filter="tbLog_demo" ></table>
+
+
+<script id="createTime" type="text/html">
+    {{new Date(d.excutetime.replace("T", " ")).pattern("yyyy-MM-dd hh:mm:ss")}}
+</script>
+<script id="stat" type="text/html">
+    {{getstat(d.stat)}}
+</script>
+<script>
+    var nameserch = $("#fwmc").val();
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#tbLog'
+          , url: apiUrl + '/api/Quartz/GetLog'
+          , cols: [[
+            { field: 'id', title: 'ID', width: 70 }
+            , { field: 'taskname', title: '任务名称' }
+            , { field: 'excutetime', title: '执行时间', templet: '#createTime' }
+            , { field: 'msg', title: '消息' }
+            , { field: 'stat', title: '状态', templet: '#stat' }
+          ]]
+          , page: true,
+            id: 'idLoag',
+            where: { name: nameserch },
+           // size:'sm'
+
+        });
+
+
+
+
+        var $ = layui.$, active = {
+        reload: function () {
+              // var demoReload = $('#demoReload');
+              var nameserch = $("#fwmc").val();
+              table.reload('idLoag', {
+                  where: {
+                      name: nameserch
+                  }, page: {
+                      curr: 1 //重新从第 1 页开始
+                  }
+              });
+          }
+        };
+
+     
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>

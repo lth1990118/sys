@@ -1,0 +1,189 @@
+﻿
+<style>
+    .layui-body {
+        overflow-y: scroll;
+    }
+</style>
+<div class="layui-card" style="background-color:#F2F2F2">
+
+
+
+
+
+    <div class="layui-card-body">
+        <div class="layui-inline">
+            <label class="layui-form-label">服务名称</label>
+            <div class="layui-input-inline">
+                <input type="text" id="fwmc" name="number" lay-verify="required|number" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-inline">
+                <input id="sex" type="text" name="number" lay-verify="required|number" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-btn-group demoTable" style="margin-left:20px">
+            <button type="button" class="layui-btn" data-type="reload">查询</button>
+            <button class="layui-btn layui-btn-normal" data-type="Add">添加</button>
+            <button type="button" class="layui-btn layui-btn-danger" data-type="getDeleteData">删除</button>
+        </div>
+
+    </div>
+
+
+</div>
+
+<table class="layui-table" id="test" lay-filter="demo" ></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script id="createTime" type="text/html">
+    {{new Date(d.createtime.replace("T", " ")).pattern("yyyy-MM-dd hh:mm:ss")}}
+</script>
+
+<script>
+    var nameserch = $("#fwmc").val();
+    var sexserch = $("#sex").val();
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#test'
+          , url: 'http://118.24.89.204:8081/api/User/GET'
+          , cols: [[
+              { type: 'checkbox', fixed: 'left' }
+            , { field: 'id', title: 'ID', width: 70 }
+            , { field: 'name', title: '用户名', width: 80 }
+            , { field: 'sex', title: '性别' }
+            , { field: 'city', title: '城市' }
+            , { field: 'phone', title: '电话' }
+            , { field: 'address', title: '住址' }
+            , { field: 'createuser', title: '创建人'}
+            , { field: 'createtime', title: '创建时间', templet: '#createTime' }
+            , { title: '操作', toolbar: '#barDemo' }
+
+            //<th lay-data="{fixed: 'right', align:'center', toolbar: '#barDemo'}">操作</th>
+          ]]
+          , page: true,
+            id: 'idTest',
+            where: { name: nameserch, sex: sexserch },
+           // size:'sm'
+
+        });
+
+
+        //监听表格复选框选择
+        table.on('checkbox(demo)', function (obj) {
+            console.log(obj)
+        });
+        //监听工具条
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+               // layer.msg('ID：' + data.id + ' 的查看操作');
+                layer.open({
+                    type: 2,
+                    content: '/ServiceMain/ServiceDetail.html?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+
+                    maxmin: true,
+                    area: ['780px', '560px']
+
+                });
+            } else if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        url: 'http://118.24.89.204:8081/api/User/Delete?deleteID=' + obj.data.id,
+                        type: 'get',
+                        success: function (data) {
+                            //obj.del();
+                            layer.close(index);
+                            parent.$(".layui-laypage-btn")[0].click();
+                        }
+
+                    });
+                
+                });
+            } else if (obj.event === 'edit') {
+            
+                layer.open({
+                    type: 2,
+                    content: '/ServiceMain/ServiceEdit.html?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+
+                    maxmin: true,
+                    area: ['780px', '560px']
+
+                });
+            }
+        });
+
+        var $ = layui.$, active = {
+            getDeleteData: function () { //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                , data = checkStatus.data;
+                //layer.alert(JSON.stringify(data));
+
+                layer.confirm('真的删除行么', function (index) {
+                    var idList = "";
+                    for (var i = 0; i < data.length; i++) {
+                        idList += data[i].id+",";
+                    }
+                    idList=  idList.substring(0, idList.length - 1);
+                    $.ajax({
+                        url: 'http://118.24.89.204:8081/api/User/Delete?deleteID=' + idList,
+                        type: 'get',
+                        success: function (data) {
+                            //obj.del();
+                            layer.close(index);
+                            parent.$(".layui-laypage-btn")[0].click();
+                        }
+
+                    });
+                    layer.close(index);
+                    parent.$(".layui-laypage-btn")[0].click();
+                });
+            }
+          , getCheckLength: function () { //获取选中数目
+              var checkStatus = table.checkStatus('idTest')
+              , data = checkStatus.data;
+              layer.msg('选中了：' + data.length + ' 个');
+          }
+          , isAll: function () { //验证是否全选
+              var checkStatus = table.checkStatus('idTest');
+              layer.msg(checkStatus.isAll ? '全选' : '未全选')
+          }, reload: function () {
+              // var demoReload = $('#demoReload');
+              var nameserch = $("#fwmc").val();
+              var sexserch = $("#sex").val();
+              table.reload('idTest', {
+                  where: {
+                      name: nameserch, sex: sexserch
+                  }, page: {
+                      curr: 1 //重新从第 1 页开始
+                  }
+              });
+          }, Add: function () {
+              layer.open({
+                  type: 2,
+                  content: '/ServiceMain/ServiceAdd.html', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+
+                  maxmin: true,
+                  area: ['780px', '560px']
+
+              });
+          }
+
+
+        };
+
+     
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>

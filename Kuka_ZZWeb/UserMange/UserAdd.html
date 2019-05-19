@@ -1,0 +1,152 @@
+﻿<link href="../CSS/layui.css" rel="stylesheet" />
+<script src="../JS/layui.js"></script>
+<script src="../JS/jquery-v3.2.1.js"></script>
+<script src="../JS/vue.js"></script>
+<script src="../JS/Main.js"></script>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+  
+    <legend>数据添加</legend>
+</fieldset>
+
+<form class="layui-form" action="" style="padding:20px" id="formBody">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="title"  autocomplete="off" placeholder="请输入标题" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+            <label class="layui-form-label">手机</label>
+            <div class="layui-input-block">
+                <input type="tel" name="phone"   lay-verify="required|phone" autocomplete="off" class="layui-input" >
+            </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">性别</label>
+        <div class="layui-input-block">
+            <input type="radio" name="sex" value="男" title="男" >
+            <input type="radio" name="sex" value="女" title="女" >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">年龄</label>
+        <div class="layui-input-block">
+            <!--inline这个小框-->
+            <input type="text" name="age" lay-verify="content" autocomplete="off" class="layui-input">
+        </div>
+
+
+    </div>
+    <div class="layui-form-item">
+            <label class="layui-form-label">住址</label>
+            <div class="layui-input-block"><!--inline这个小框-->
+                <input type="text" name="address"  lay-verify="content" autocomplete="off" class="layui-input" >
+            </div>
+
+       
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">城市</label>
+        <div class="layui-input-block">
+            <!--inline这个小框-->
+            <input type="text" name="city" lay-verify="content" autocomplete="off" class="layui-input">
+        </div>
+
+
+    </div>
+
+    <div class="layui-form-item">
+            <label class="layui-form-label">创建日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="createtime" id="date" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" >
+            </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">创建日期</label>
+        <div class="layui-input-block">
+            <input type="text" name="createtime" id="date1" lay-verify="datetime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+            <label class="layui-form-label">创建人</label>
+            <div class="layui-input-block">
+                <input type="tel" name="createuser" lay-verify="content" autocomplete="off" class="layui-input" >
+            </div>
+     
+    </div>
+      
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <a id="closeIframe" class="layui-btn">返回</a>
+            </div>
+        </div>
+</form>
+
+<script>
+layui.use(['form', 'layedit', 'laydate'], function(){
+  var form = layui.form
+  ,layer = layui.layer
+  ,layedit = layui.layedit
+  ,laydate = layui.laydate;
+
+  //日期
+  laydate.render({
+      elem: '#date',
+      type: 'datetime'
+  });
+
+    //日期
+  laydate.render({
+      elem: '#date1',
+      type: 'datetime'
+  });
+
+
+
+  //自定义验证规则
+  form.verify({
+    name: function(value){
+      if(value.length < 5){
+        return '标题至少得5个字符啊';
+      }
+    }
+  });
+
+
+  //监听提交
+  form.on('submit(demo1)', function (data) {
+      $.ajax({
+          url: apiUrl + '/api/User/Add',
+          type: 'post',
+          data: data.field,
+          success: function (data) {
+              parent.layer.close(index);
+              parent.$(".layui-laypage-btn")[0].click();
+              parent.layer.alert('添加成功');
+          }
+      });
+      var maintenancePlace = JSON.stringify(data.field);
+    return false;
+  });
+});
+
+
+</script>
+<script>
+    //注意：parent 是 JS 自带的全局对象，可用于操作父页面
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    //关闭iframe
+    $('#closeIframe').click(function () {
+
+        //var val = $('#name').val();
+        //if (val === '') {
+        //    parent.layer.msg('请填写标记');
+        //    return;
+        //}
+        //parent.layer.msg('您将标记 [ ' + val + ' ] 成功传送给了父窗口');
+        parent.layer.close(index);
+    });
+</script>

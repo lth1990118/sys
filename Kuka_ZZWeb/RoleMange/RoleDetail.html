@@ -1,0 +1,83 @@
+﻿<link href="../CSS/layui.css" rel="stylesheet" />
+<script src="../JS/layui.js"></script>
+<script src="../JS/jquery-v3.2.1.js"></script>
+<script src="../JS/vue.js"></script>
+<script src="../JS/Main.js"></script>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+
+    <legend>数据查看</legend>
+</fieldset>
+
+<form class="layui-form" action="" style="padding:20px" id="formBody">
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限名</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="title" v-model="name" autocomplete="off" placeholder="请输入标题" class="layui-input" disabled="">
+            <input type="hidden" name="ID" v-model="id" disabled="">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">创建日期</label>
+        <div class="layui-input-block">
+            <input type="text" name="createtime" id="date" v-model="new Date(createtime.replace('T', ' ')).pattern('yyyy-MM-dd hh:mm:ss')" lay-verify="datetime" placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input" disabled="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">创建人</label>
+        <div class="layui-input-block">
+            <input type="tel" name="createuser" v-model="createuser" lay-verify="content" autocomplete="off" class="layui-input" disabled="">
+        </div>
+
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <!--<button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>-->
+            <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+            <a v-on:click="colsedPage()" class="layui-btn">返回</a>
+        </div>
+    </div>
+</form>
+
+<script>
+    //注意：parent 是 JS 自带的全局对象，可用于操作父页面
+ var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+layui.use(['form', 'layedit', 'laydate'], function(){
+  var form = layui.form
+  ,layer = layui.layer
+  ,layedit = layui.layedit
+  ,laydate = layui.laydate;
+
+
+  //自定义验证规则
+  //form.verify({
+  //  name: function(value){
+  //    if(value.length < 5){
+  //      return '标题至少得5个字符啊';
+  //    }
+  //  }
+  });
+
+
+
+$.ajax({
+    url: apiUrl + '/api/Main/GetRoleByID?ID=' + getQueryString("id"),
+    type: 'get',
+    async:false,
+    success: function (data) {
+        var det = new Vue({
+            el: '#formBody',
+            data: data,
+            methods: {
+                colsedPage: function () {
+                    parent.layer.close(index);
+                }
+            }
+        })
+    }
+
+});
+
+</script>

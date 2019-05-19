@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuka_ZZWeb", "Kuka_ZZWeb\Kuka_ZZWeb.csproj", "{1685D245-EA2D-45CA-AC17-202648310C07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuka_ZZWebApi", "Kuka_ZZWebApi\Kuka_ZZWebApi.csproj", "{2B21C38A-DAE5-4A25-9EF9-AC7118CCBEF0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{78DBBE40-AC79-4ED9-B4C3-05C1EF0479E0} = {78DBBE40-AC79-4ED9-B4C3-05C1EF0479E0}
+		{E72C225B-7E28-4012-BE24-97D0950260E0} = {E72C225B-7E28-4012-BE24-97D0950260E0}
+		{CF6274DC-BFD0-4699-B3A8-8763D331C80B} = {CF6274DC-BFD0-4699-B3A8-8763D331C80B}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuka_Quartz", "Kuka_Quartz\Kuka_Quartz.csproj", "{2EF26216-028E-4B80-BEEE-5489036BD14F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuka_Model", "Kuka_Model\Kuka_Model.csproj", "{78DBBE40-AC79-4ED9-B4C3-05C1EF0479E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuka_ZZBLL", "Kuka_ZZBLL\Kuka_ZZBLL.csproj", "{E72C225B-7E28-4012-BE24-97D0950260E0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CF6274DC-BFD0-4699-B3A8-8763D331C80B} = {CF6274DC-BFD0-4699-B3A8-8763D331C80B}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kuka_ZZDAL", "kuka_ZZDAL\kuka_ZZDAL.csproj", "{CF6274DC-BFD0-4699-B3A8-8763D331C80B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{78DBBE40-AC79-4ED9-B4C3-05C1EF0479E0} = {78DBBE40-AC79-4ED9-B4C3-05C1EF0479E0}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1685D245-EA2D-45CA-AC17-202648310C07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1685D245-EA2D-45CA-AC17-202648310C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1685D245-EA2D-45CA-AC17-202648310C07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1685D245-EA2D-45CA-AC17-202648310C07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B21C38A-DAE5-4A25-9EF9-AC7118CCBEF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B21C38A-DAE5-4A25-9EF9-AC7118CCBEF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B21C38A-DAE5-4A25-9EF9-AC7118CCBEF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B21C38A-DAE5-4A25-9EF9-AC7118CCBEF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF26216-028E-4B80-BEEE-5489036BD14F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF26216-028E-4B80-BEEE-5489036BD14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF26216-028E-4B80-BEEE-5489036BD14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF26216-028E-4B80-BEEE-5489036BD14F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78DBBE40-AC79-4ED9-B4C3-05C1EF0479E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78DBBE40-AC79-4ED9-B4C3-05C1EF0479E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78DBBE40-AC79-4ED9-B4C3-05C1EF0479E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78DBBE40-AC79-4ED9-B4C3-05C1EF0479E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E72C225B-7E28-4012-BE24-97D0950260E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E72C225B-7E28-4012-BE24-97D0950260E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E72C225B-7E28-4012-BE24-97D0950260E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E72C225B-7E28-4012-BE24-97D0950260E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF6274DC-BFD0-4699-B3A8-8763D331C80B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF6274DC-BFD0-4699-B3A8-8763D331C80B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF6274DC-BFD0-4699-B3A8-8763D331C80B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF6274DC-BFD0-4699-B3A8-8763D331C80B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
